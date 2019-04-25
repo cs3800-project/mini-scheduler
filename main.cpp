@@ -168,7 +168,7 @@ int setQuantum()
 	int quantum = -1;
 	while (quantum < 1)
 	{
-		cout << "\Set scheduling quantum : ";
+		cout << "Set scheduling quantum : ";
 		cin >> quantum;
 
 		// TODO : catch string input error

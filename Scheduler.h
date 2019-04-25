@@ -10,6 +10,7 @@
 
 #include "Process.h"
 #include <vector>
+#include <climits>
 
 class Scheduler
 {
@@ -76,4 +77,4 @@ void Scheduler::clean()
 	}
 }
 
-#endif*
+#endif
