@@ -8,7 +8,8 @@
 #include <sstream>
 #include <fstream>
 
-#include "Sys.h"
+#include "sys.h"
+#include "scheduler.h"
 
 vector<string> readProcFile(string filename);
 vector<Process> spawnProcs(vector<string> procData);
