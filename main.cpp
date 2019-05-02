@@ -17,14 +17,15 @@ int selectScheduler();
 int setQuantum();
 vector<string> parse(string str, char delim = ' ');
 
-int main()
+int main(int argc, char** argv)
 {
-	string filename;
+	if(argc < 2) {
+		cout << "Please specify a file on the command line." << endl;
+		exit(1);
+	}
+	string filename = argv[1];
 	vector<string> procData;
-
-	// read user input file for process data
-	cout << "Enter input filename: ";
-	cin >> filename;
+	
 	procData = readProcFile(filename);
 
 	// spawn processes from input file's process data
