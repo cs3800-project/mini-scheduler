@@ -12,6 +12,7 @@
 #include <vector>
 #include <climits>
 #include <iostream>
+#include <algorithm>
 
 class Scheduler
 {
@@ -22,9 +23,12 @@ public:
 
 	void FCFS(const int quantum, const int time);	// First-Come, First-Serve scheduling 
 	void RR(const int quantum, const int time);		// Round Robin scheduling 
-	void SJN(const int quantum, const int time);	// Shortest Job Next scheduling 
+	void SJN(int &time);	// Shortest Job Next scheduling
 	void SRT(const int quantum, const int time);	// Shortest Remaining Time scheduling 
 	void HRRN(const int quantum, const int time);	// Highest Response Ratio Next scheduling 
+
+	static bool earlierJob(Process *p1, Process *p2);
+	static bool shorterJob(Process *p1, Process *p2);
 };
 
 #endif
