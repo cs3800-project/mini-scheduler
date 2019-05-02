@@ -66,11 +66,11 @@ int main(int argc, char** argv)
 			//sys->mScheduler->FCFS(sys->mQuantum, sys->mTime);
 
 		//// Shortest Job Next
-		//else if (sys->mSchedSel == 2)
-		//	sys->mScheduler->SJN(sys->mQuantum, sys->mTime);
+		if (sys->mSchedSel == 2)
+			sys->mScheduler->SJN(sys->mTime);
 
 		// Shortest Remaining Time
-		if (sys->mSchedSel == 3)
+		else if (sys->mSchedSel == 3)
 			sys->mScheduler->SRT(sys->mQuantum, sys->mTime);
 
 		//// Round Robin

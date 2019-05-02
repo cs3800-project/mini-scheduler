@@ -1,5 +1,36 @@
 #include "scheduler.h"
 
+void Scheduler::SJN(int &time) {
+    // no processes to schedule
+    if(mProcesses.size() == 0) {
+        return;
+    }
+
+	Process* sjnProc;
+
+    // sort original processes by arrival time of job
+    // sort(mProcesses.begin(), mProcesses.end(), earlierJob);
+
+	for(int i = 0; i < mProcesses.size(); i++) {
+		cout << mProcesses[i]->mName << endl;
+	}
+	cout << "-----------------------------" << endl;
+
+	for(int i = 0; i < mProcesses.size(); i++) {
+		// if the process has shown up yet at the current time
+		if(mProcesses[i]->mArrivalT <= time) {
+			sjnProc = *min_element(mProcesses.begin(), mProcesses.end(), shorterJob);
+			cout << "runnable process found: " << sjnProc->mName << endl;
+			time += sjnProc->mExeT;		
+		}
+		
+		auto it = find(mProcesses.begin(), mProcesses.end(), sjnProc);
+		if (it != mProcesses.end()) {
+			mProcesses.erase(it);
+		}
+	}
+}
+
 // TODO: rework logic to increment by time slice instead of quantum
 // Shortest Remaining Time
 void Scheduler::SRT(const int quantum, const int time)
@@ -49,4 +80,12 @@ void Scheduler::clean()
 		if (mProcesses[i]->mFinished)
 			mProcesses.erase(mProcesses.begin()+i);
 	}
+}
+
+bool Scheduler::earlierJob(Process *p1, Process *p2) {
+	return p1->mArrivalT < p2->mArrivalT;
+}
+
+bool Scheduler::shorterJob(Process *p1, Process *p2) {
+	return p1->mExeT < p2->mExeT;
 }
