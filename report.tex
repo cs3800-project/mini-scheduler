@@ -1,0 +1,83 @@
+%
+%You can keep the 12pt font size, or go to 11pt or (default) 10pt
+% Do NOT go any larger than 12pt font size for submission
+%
+%If you want to edit a printed copy, you may want to add draft mode
+% (as in \documentclass[draft,conference,12pt]{IEEEtran})
+% This adds space between the lines providing easier editing markup
+%
+%For more details see 
+% http://ras.papercept.net/conferences/support/files/IEEEtran_HOWTO.pdf
+%
+\documentclass[conference,11pt]{IEEEtran}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{url}
+\usepackage{flushend}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{Optimal Scheduling Algorithms for Varying Process Sets}
+
+\author{\IEEEauthorblockN{Rachael Engle, Anna Pankiewicz, and Albert Perlman}
+\IEEEauthorblockA{Computer Science Department\\
+Missouri University of Science and Technology\\
+Rolla, MO 65409}}
+
+% make the title area
+\maketitle
+
+\begin{abstract}
+This work explores the advantages and disadvantages of using particular scheduling algorithms with different types of processes. The five specific algorithms analyzed were First In First Out, Round Robin, Shortest Job Next, Shortest Remaining Time, and Highest Response Ratio Next.
+\end{abstract}
+
+\section{Background}
+
+
+\section{Introduction}
+
+
+\section{Algorithms}
+
+
+\subsection{First In First Out}
+
+
+\subsection{Round Robin}
+
+
+\subsection{Shortest Job Next}
+With any implementation, the Fork Ombudsman first checks any request-to-eat messages against the current resource availability. If the resources (left and right forks from the perspective of the requesting philosopher process) are currently available, they are set to in-use and the philosopher is given permission to eat. If both forks are not currently available, the initial algorithm places the philosopher's request into a First In First Out (FIFO) queue. No message is sent back to the philosopher until the request can be fulfilled. The time between the philosopher's request and granting permission to eat is the philosopher's waiting time.
+
+\subsection{Shortest Remaining Time}
+An additional challenge surfaced with the single FIFO queue in that as the number of philosophers increased, the number of possible queued requests could increase. While the first request in the queue might not be able to be processed, it could be the case that additional requests could be satisfied. This drove the generation of the FIFO-Priority queuing mechanism. In this approach, the implementation is linked list which is filled in a FIFO manner (items are processed from the beginning of the list and added to the end of the list).
+
+\subsection{Highest Response Ratio Next}
+An additional challenge surfaced with the single FIFO queue in that as the number of philosophers increased, the number of possible queued requests could increase. While the first request in the queue might not be able to be processed, it could be the case that additional requests could be satisfied. This drove the generation of the FIFO-Priority queuing mechanism. In this approach, the implementation is linked list which is filled in a FIFO manner (items are processed from the beginning of the list and added to the end of the list).
+
+\section{Results}
+An initial examination attempted to analyze the impact of delays for a fixed philosopher size. The classic five-philosopher model was used and the random thinking and eating portions were set to between 0 and MAXDELAY seconds. For each of these simulations, the master node was instructed to send the exit message (to halt the simulation) after an average of 100 eat requests from each philosopher. Due to the stochastic nature of the system, the actual number of eating cycles varied across philosophers and experiments.
+
+Fig.~\ref{pQreqs} shows the number of total queued requests over a given simulation cycle. As expected, the FIFO-Priority algorithm generates more requests to queue processes due to the priority-based processing to prevent starvation. It additionally appears that longer delaying can lead to a slight additional burden on queuing (likely due to the increasing variation in possible wait times across the processes).
+
+This is confirmed with a longer analysis of the queuing scaling up into the hundreds of philosophers as shown in Fig.~\ref{pFQreq} and Fig.~\ref{pFPQreq}. (These experiments were run under a fixed MAXDELAY as subsequently discussed.) Note that the queue requests in the priority approach seem to scale linearly whereas the FIFO seems to be hitting an upper threshold. This is likely due to the fact that the FIFO algorithm is pushing up against maximum wait delays which are largely prevented with the Priority improvements. In other words, no additional queue requests are coming in because they're already waiting in a queue to be processed with FIFO. FIFO priority processes queued requests much more efficiently, therefore there is a greater chance that additional requests will come in which require in-use resources and must be queued.
+
+Fig. and Fig. show the summations of waiting, thinking, and eating times of the 5 philosophers under varying maximum delays for the FIFO and FIFO-Priority algorithms, respectively. The amount of time randomly spent for each philosopher's thinking and eating components were independently calculated and implemented as sleep commands during each eating cycle. These specifically excluded introducing any time waiting for the OK message provided by the master when the necessary fork resources were available to begin eating. Experimental results seemed to indicate the message passing overhead was insignificant in adding to the wait times. In other words, the wait times were due to resources not being available, not due to latency in communication among the processes.
+
+To test the scalability of the solution, a set of experiments were performed fixing the maximum delay to 1 second (so equally randomly no delay or a one second delay). The two algorithms were tested and scaled up to 200 philosophers. Due to technical limitations on the amount of resources a single host process could consume on campus machines, testing could not continue beyond this threshold. The total queue requests were previously shown in Fig.~\ref{pFQreq} and Fig.~\ref{pFPQreq}.
+
+In addition to queue times and total times, it seemed the normalized times would be of interest. In other words, with philosophers eating, waiting, and thinking stochastically, what would it look like if the times were analyzed on a ``per eat'' basis. These values were collected and plotted for each of the philosophers across the maximum 1-second random delay metric. For two philosophers, two sets of wait, think, and eat times were collected. For three philosophers, three sets of times were collected, and so on. With the think and eat times randomly set between 0 and 1, the average time per eat should be close to 0.5 seconds, and the data confirms this. The timing results scaled up to 50 philosophers are shown as Fig.~\ref{pFAvgEat} and Fig.~\ref{pFPAvgEat}.
+
+
+\end{document}
