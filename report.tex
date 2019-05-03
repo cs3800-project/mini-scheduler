@@ -54,9 +54,10 @@ This aforementioned simulated system is not alone in handling process arrivals a
 
 \section{Algorithms}
 
-
 \subsection{First In First Out}
+Arguably, the most simple scheduling algorithm is First In First Out (FIFO). As processes arrive, they are added to a queue. When the processor finishes executing a job, the longest-waiting process from this queue is selected to run.
 
+There are some metrics that were outside the given scope of our project. We were unable to compare the performance of FIFO on processor-bound processes vs. I/O bound processes, and we were unable to simulate multiple processors running simultaneously as they would on a real system.
 
 \subsection{Round Robin}
 
