@@ -1,7 +1,7 @@
 #include "sys.h"
 
 // add newly arrived processes from job list to Scheduler
-// return: NONE
+// return: true if one or more processes added to Scheduler
 void Sys::schedule()
 {
 	// if no jobs left to schedule
@@ -15,8 +15,7 @@ void Sys::schedule()
 	for (int i = 0; i < mProcesses.size(); i++)
 	{
 		// add process to Scheduler
-		if (mProcesses[i].mArrivalT <= mTime && 
-			mProcesses[i].mArrivalT > mTime-mQuantum)
+		if (mProcesses[i].mArrivalT == mTime)
 			mScheduler->mProcesses.push_back(&mProcesses[i]);
 	}
 }
@@ -47,7 +46,7 @@ void Sys::printProgress()
 	if (mScheduler->mProcesses.size() == 0)
 		return;
 
-	cout << "\n" << mTime-mQuantum << " ~ " << mTime << " _________________________________\n";
+	cout << "\n" << mTime-1 << " ~ " << mTime << " _________________________________\n";
 
 	// print progress of each process on Scheduler
 	for (int i = 0; i < mScheduler->mProcesses.size(); i++)

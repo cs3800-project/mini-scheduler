@@ -14,7 +14,7 @@
 class Sys
 {
 public:
-	Scheduler* mScheduler;
+	Scheduler* mScheduler;			// system's Scheduler
 	vector <Process> mProcesses;	// process job list read in at start 
 	
 	int mQuantum;	// time units for process execution before rescheduling 

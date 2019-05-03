@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // main.cpp
-// @desc: simulate a variety of scheduling algorithms given a time quantum and
-//		  job list of processes to execute
+// @desc: simulate a variety of scheduling algorithms given a job list of
+//		  processes to execute
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
@@ -44,8 +44,9 @@ int main(int argc, char** argv)
 	// select System scheduling algorithm
 	sys->mSchedSel = selectScheduler();
 
-	// set System scheduling quantum
-	sys->mQuantum = setQuantum();
+	// set System scheduling quantum for Round Robin
+	if (sys->mSchedSel == 4)
+		sys->mQuantum = setQuantum();
 
 	// true if all processes in job list are finished
 	bool finished = false;
@@ -54,6 +55,9 @@ int main(int argc, char** argv)
 	// run processes until all jobs finished
 	while (!finished)
 	{
+		// display process progress
+		sys->printProgress();
+
 		// check for newly arrived processes and add them to Scheduler
 		sys->schedule();
 
@@ -71,7 +75,7 @@ int main(int argc, char** argv)
 
 		// Shortest Remaining Time
 		else if (sys->mSchedSel == 3)
-			sys->mScheduler->SRT(sys->mQuantum, sys->mTime);
+			sys->mScheduler->SRT(sys->mTime);
 
 		//// Round Robin
 		//else if (sys->mSchedSel == 4)
@@ -81,10 +85,7 @@ int main(int argc, char** argv)
 		//else if (sys->mSchedSel == 5)
 		//	sys->mScheduler->HRRN(sys->mQuantum, sys->mTime);
 
-		sys->mTime += sys->mQuantum;
-
-		// display process progress
-		sys->printProgress();
+		sys->mTime++;
 
 		// check if finished
 		finished = sys->jobsFinished();
