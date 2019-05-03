@@ -48,7 +48,9 @@ Through the operating systems class this semester, each of these five scheduling
 While these given comparisons are fantastic, the purpose of our project was to implement these scheduling algorithms and observe the differences ourselves. As we are only simulating one processor, some metrics are difficult to observe, such as throughput. However, by analyzing other metrics such as turnaround time, normalized turnaround time, and response time, we can gain insight into the more qualitative performance metrics.
 
 \section{Introduction}
+Our program design centered around a simulated system capable of handling incoming jobs, scheduling them, and allowing the user to select a scheduling function. A simulated job file is provided at the command line, and this file contains the process names, arrival times, and execution times. For simplicity's sake, the execution time of a process is provided, as it would be outside the scope of the project to analyze previous jobs and their characteristics to provide even remotely accurate time estimates.
 
+This aforementioned simulated system is not alone in handling process arrivals and requests. Along with the "system", there is a scheduler that runs the selected algorithm until all incoming processes have been completed. Every time cycle, this scheduler checks for jobs arriving at the current time, adds them to the appropriate queue of the running scheduling algorithm, and provides a snapshot of the system state at that time. When all jobs are finished, the scheduler concludes and produces a report of the algorithm's performance on that process set.
 
 \section{Algorithms}
 
