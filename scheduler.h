@@ -23,7 +23,7 @@ public:
 
 	void FCFS(const int quantum, const int time);	// First-Come, First-Serve scheduling 
 	void RR(const int quantum, const int time);		// Round Robin scheduling 
-	void SJN(int &time);	// Shortest Job Next scheduling
+	void SJN(int& sysTime);	// Shortest Job Next scheduling
 	void SRT(int& sysTime);	// Shortest Remaining Time scheduling 
 	void HRRN(int& sysTime);	// Highest Response Ratio Next scheduling 
 
