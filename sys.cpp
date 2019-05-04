@@ -53,7 +53,7 @@ void Sys::printProgress()
 	if (mScheduler->mProcesses.size() == 0)
 		return;
 
-	cout << "\n" << mTime-1 << " ~ " << mTime << " _________________________________\n";
+	cout << "\n" << mTime << " ___________________________________________\n";
 
 	// print progress of each process on Scheduler
 	for (int i = 0; i < mScheduler->mProcesses.size(); i++)

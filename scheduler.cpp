@@ -1,11 +1,60 @@
 #include "scheduler.h"
 
+// Round Robin
+void Scheduler::RR(const int quantum, int& sysTime, int& count) {
+  // no processes to schedule
+    if(mProcesses.size() == 0)
+        return;
+
+	int minProgT = INT_MAX;
+	Process* nextProc;
+
+	// // determine process with least progress time so far
+	// for (int i = 0; i < mProcesses.size(); i++)
+	// {
+	// 	if (mProcesses[i]->mProgressT < minProgT)
+	// 	{
+	// 		minProgT = mProcesses[i]->mProgressT;
+	// 		nextProc = mProcesses[i];
+	// 	}
+	// }
+
+	cout << "\nrrCount: " << count << "\t# Procs: " << mProcesses.size();
+	// determine next process
+	int index = count % mProcesses.size();
+	nextProc = mProcesses[index];
+
+	// "run" next process by incrementing its progress time by quantum
+	nextProc->mProgressT += quantum;
+
+	// increment system time by quantum
+	sysTime += quantum;
+
+	// increment Round Robin count
+	count++;
+
+	// process progress time exceeds process execution time
+	if (nextProc->mProgressT > nextProc->mExeT)
+	{
+		// roll back system time to when process actually completed execution
+		sysTime -= (nextProc->mProgressT - nextProc->mExeT);
+		nextProc->mProgressT = nextProc->mExeT;
+	}
+	
+	// update process run time
+	nextProc->mRunT = sysTime - nextProc->mArrivalT;
+
+	// process finished
+	if (nextProc->mProgressT == nextProc->mExeT)
+		cout << "\n\tprocess \'" << nextProc->mName << "\' finished | " 
+			<< "run time: " << nextProc->mRunT << "\n";
+}
+
 // Shortest Job Next
 void Scheduler::SJN(int& sysTime) {
     // no processes to schedule
-    if(mProcesses.size() == 0) {
+    if(mProcesses.size() == 0)
         return;
-    }
 
 	Process* sjnProc;
 
@@ -44,8 +93,7 @@ void Scheduler::SJN(int& sysTime) {
 }
 
 // Shortest Remaining Time
-void Scheduler::SRT(int& sysTime)
-{
+void Scheduler::SRT(int& sysTime) {
 	 // no processes to schedule
     if(mProcesses.size() == 0)
         return;
@@ -83,8 +131,7 @@ void Scheduler::SRT(int& sysTime)
 }
 
 // Highest Response Ratio Next
-void Scheduler::HRRN(int& sysTime)
-{
+void Scheduler::HRRN(int& sysTime) {
 	 // no processes to schedule
     if(mProcesses.size() == 0)
         return;
@@ -113,7 +160,7 @@ void Scheduler::HRRN(int& sysTime)
 	hrrProc->mProgressT = hrrProc->mExeT;
 
 	// update system time to reflect process execution
-	sysTime+= hrrProc->mExeT;
+	sysTime += hrrProc->mExeT;
 
 	// update process run time
 	hrrProc->mRunT = sysTime - hrrProc->mArrivalT;
@@ -123,8 +170,7 @@ void Scheduler::HRRN(int& sysTime)
 }
 
 // remove finished processes from Scheduler
-void Scheduler::clean()
-{
+void Scheduler::clean() {
 	// if no jobs left to clean
 	if (mProcesses.size() == 0)
 		return;

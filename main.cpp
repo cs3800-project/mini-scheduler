@@ -44,9 +44,11 @@ int main(int argc, char** argv)
 	// select System scheduling algorithm
 	sys->mSchedSel = selectScheduler();
 
-	// set System scheduling quantum for Round Robin
+	// set System scheduling quantum for Round Robin and initialize count
 	if (sys->mSchedSel == 4)
 		sys->mQuantum = setQuantum();
+
+	int rrCount = 0;
 
 	// true if all processes in job list are finished
 	bool finished = false;
@@ -74,9 +76,9 @@ int main(int argc, char** argv)
 		else if (sys->mSchedSel == 3)
 			sys->mScheduler->SRT(sys->mTime);
 
-		//// Round Robin
-		//else if (sys->mSchedSel == 4)
-		//	sys->mScheduler->RR(sys->mQuantum, sys->mTime);
+		// Round Robin
+		else if (sys->mSchedSel == 4)
+			sys->mScheduler->RR(sys->mQuantum, sys->mTime, rrCount);
 
 		// Highest Response Ratio Next
 		else if (sys->mSchedSel == 5)
