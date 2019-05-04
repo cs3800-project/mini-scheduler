@@ -21,7 +21,7 @@ public:
 
 	void clean();	// remove all finished processes from Scheduler
 
-	void FCFS(const int quantum, const int time); // First-Come, First-Serve scheduling 
+	void FCFS(int& sysTime); // First-Come, First-Serve scheduling 
 	void RR(const int quantum, int& sysTime, int& count); // Round Robin scheduling 
 	void SJN(int& sysTime);	// Shortest Job Next scheduling
 	void SRT(int& sysTime);	// Shortest Remaining Time scheduling 

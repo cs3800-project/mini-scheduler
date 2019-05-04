@@ -1,5 +1,22 @@
 #include "scheduler.h"
 
+// First-Come First-Serve
+void Scheduler::FCFS(int& sysTime)
+{
+	// no processes to schedule
+    if(mProcesses.size() == 0)
+        return;
+
+	// run processes to completion
+	mProcesses[0]->mProgressT = mProcesses[0]->mExeT;
+
+	// update system time to reflect process execution
+	sysTime += mProcesses[0]->mExeT;
+
+	// update process run time
+	mProcesses[0]->mRunT = sysTime - mProcesses[0]->mArrivalT;
+}
+
 // Round Robin
 void Scheduler::RR(const int quantum, int& sysTime, int& count) {
   // no processes to schedule
