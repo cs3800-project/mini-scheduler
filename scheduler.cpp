@@ -58,38 +58,19 @@ void Scheduler::SJN(int& sysTime) {
 
 	Process* sjnProc;
 
-    // sort original processes by arrival time of job
-    // sort(mProcesses.begin(), mProcesses.end(), earlierJob);
+	sjnProc = *min_element(mProcesses.begin(), mProcesses.end(), shorterJob);
 
-	// for(int i = 0; i < mProcesses.size(); i++) {
-	// 	cout << mProcesses[i]->mName << endl;
-	// }
-	// cout << "-----------------------------" << endl;
+	// run shortest job to completion
+	sjnProc->mProgressT = sjnProc->mExeT;
 
-	//for(int i = 0; i < mProcesses.size(); i++) {
-		// if the process has shown up yet at the current time
-		//if(mProcesses[i]->mArrivalT <= sysTime) {
-			sjnProc = *min_element(mProcesses.begin(), mProcesses.end(), shorterJob);
-			//cout << "runnable process found: " << sjnProc->mName << endl;
+	// update system time to reflect process execution
+	sysTime += sjnProc->mExeT;		
 
-			// run shortest job to completion
-			sjnProc->mProgressT = sjnProc->mExeT;
+	// update process run time
+	sjnProc->mRunT = sysTime - sjnProc->mArrivalT;
 
-			// update system time to reflect process execution
-			sysTime += sjnProc->mExeT;		
-
-			// update process run time
-			sjnProc->mRunT = sysTime - sjnProc->mArrivalT;
-
-			cout << "\n\tprocess \'" << sjnProc->mName << "\' finished | " 
-				<< "run time: " << sjnProc->mRunT << "\n";
-	//	}
-		
-	// 	auto it = find(mProcesses.begin(), mProcesses.end(), sjnProc);
-	// 	if (it != mProcesses.end()) {
-	// 		mProcesses.erase(it);
-	// 	}
-	// }
+	cout << "\n\tprocess \'" << sjnProc->mName << "\' finished | " 
+		<< "run time: " << sjnProc->mRunT << "\n";
 }
 
 // Shortest Remaining Time
@@ -182,10 +163,6 @@ void Scheduler::clean() {
 		if (mProcesses[i]->mFinished)
 			mProcesses.erase(mProcesses.begin()+i);
 	}
-}
-
-bool Scheduler::earlierJob(Process *p1, Process *p2) {
-	return p1->mArrivalT < p2->mArrivalT;
 }
 
 bool Scheduler::shorterJob(Process *p1, Process *p2) {

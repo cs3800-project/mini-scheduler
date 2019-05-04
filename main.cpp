@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 
 #include "sys.h"
 #include "scheduler.h"
@@ -15,6 +16,8 @@ vector<string> readProcFile(string filename);
 vector<Process> spawnProcs(vector<string> procData);
 int selectScheduler();
 int setQuantum();
+void genReport(Sys* sys);
+bool exeTime(Process p1, Process p2);
 vector<string> parse(string str, char delim = ' ');
 
 int main(int argc, char** argv)
@@ -90,6 +93,9 @@ int main(int argc, char** argv)
 		// mark completed processes as finished and check if all done
 		finished = sys->jobsFinished();
 	} 
+
+ 	// generate report text file
+	genReport(sys);
 
 	return 0;
 }
@@ -187,6 +193,63 @@ int setQuantum()
 	}
 
 	return quantum;
+}
+
+// generate report text file
+void genReport(Sys* sys)
+{
+	string filename;
+
+	// First Come - First Serve
+	//if (sys->mSchedSel == 1)
+		//sys->mScheduler->FCFS(sys->mQuantum, sys->mTime);
+
+	//// Shortest Job Next
+	if (sys->mSchedSel == 2)
+		filename = "SJN.txt";
+
+	// Shortest Remaining Time
+	else if (sys->mSchedSel == 3)
+		filename = "SRT.txt";
+
+	// Round Robin
+	else if (sys->mSchedSel == 4)
+		filename = "RR.txt";
+
+	// Highest Response Ratio Next
+	else if (sys->mSchedSel == 5)
+		filename = "HRRN.txt";
+
+	string filepath = "/usr/local/home/adpvg9/SDRIVE/CS3800/mini-scheduler/"+filename;
+	//const char *path = filepath;
+    ofstream report(filepath); //open in constructor
+	
+	report << filename << "\n\n";
+	report << "Process\t  Exe Time  Run Time   Normalized Turn-Around Time\n";
+	report << "=============================================================================\n";
+
+	// sort processes in order of exe time
+	sort(sys->mProcesses.begin(), sys->mProcesses.end(), exeTime);
+
+	for(int i = 0; i < sys->mProcesses.size(); i++)
+	{			
+		int exeT = sys->mProcesses[i].mExeT;
+		int runT = sys->mProcesses[i].mRunT;
+		float normTr = float(runT)/exeT;
+
+		report << sys->mProcesses[i].mName << "\t  ";
+		report << exeT << "\t    ";
+		report << runT << "\t       ";
+		report << normTr << "\n";	
+	}
+	
+	report.close();
+
+	cout << "generated report: " << filename << "\n";
+}
+
+bool exeTime(Process p1, Process p2) {
+	return p1.mExeT < p2.mExeT;
 }
 
 // parse argument string str into substrings using specified delimiter
