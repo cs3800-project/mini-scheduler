@@ -1,3 +1,8 @@
+///////////////////////////////////////////////////////////////////////////////
+// sys.cpp
+// @desc: Sys class implementation file
+///////////////////////////////////////////////////////////////////////////////
+
 #include "sys.h"
 
 // add newly arrived processes from job list to Scheduler
@@ -47,6 +52,7 @@ bool Sys::jobsFinished()
 
 // print progress of all processes on Scheduler
 // return: NONE
+
 void Sys::printProgress()
 {
 	// if no jobs left to schedule
