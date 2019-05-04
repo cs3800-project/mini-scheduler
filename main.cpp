@@ -31,72 +31,83 @@ int main(int argc, char** argv)
 	
 	procData = readProcFile(filename);
 
-	// spawn processes from input file's process data
-	vector<Process> processes = spawnProcs(procData);
+	// execute program until user chooses to exit
+	bool execute = true;
 
-	// initialize Scheduler
-	Scheduler SystemScheduler;
-	Scheduler* scheduler = &SystemScheduler;
-
-	// initalize System with Scheduler and process job list 
-	Sys System;
-	Sys* sys = &System;
-	sys->mScheduler = scheduler;
-	sys->mProcesses = processes;
-
-	// select System scheduling algorithm
-	sys->mSchedSel = selectScheduler();
-
-	// set System scheduling quantum for Round Robin and initialize count
-	if (sys->mSchedSel == 4)
-		sys->mQuantum = setQuantum();
-
-	int rrCount = 0;
-
-	// true if all processes in job list are finished
-	bool finished = false;
-
-	// TODO: rework logic to run every time slice instead of once per quantum
-	// run processes until all jobs finished
-	while (!finished)
+	while (execute)
 	{
-		// check for newly arrived processes and add them to Scheduler
-		sys->schedule();
+		// spawn processes from input file's process data
+		vector<Process> processes = spawnProcs(procData);
 
-		// clean finished processes from Scheduler
-		sys->mScheduler->clean();
+		// initialize Scheduler
+		Scheduler SystemScheduler;
+		Scheduler* scheduler = &SystemScheduler;
 
-		///* execute processes according to selected scheduling algorithm *///	
-		// First Come - First Serve
-		//if (sys->mSchedSel == 1)
-			//sys->mScheduler->FCFS(sys->mQuantum, sys->mTime);
+		// initalize System with Scheduler and process job list 
+		Sys System;
+		Sys* sys = &System;
+		sys->mScheduler = scheduler;
+		sys->mProcesses = processes;
+		
+		// select System scheduling algorithm
+		sys->mSchedSel = selectScheduler();
 
-		//// Shortest Job Next
-		if (sys->mSchedSel == 2)
-			sys->mScheduler->SJN(sys->mTime);
+		// set System scheduling quantum for Round Robin and initialize count
+		if (sys->mSchedSel == 4)
+			sys->mQuantum = setQuantum();
 
-		// Shortest Remaining Time
-		else if (sys->mSchedSel == 3)
-			sys->mScheduler->SRT(sys->mTime);
+		// user chose to exit
+		if (sys->mSchedSel == 0)
+			execute = false;
+		
+		int rrCount = 0;
 
-		// Round Robin
-		else if (sys->mSchedSel == 4)
-			sys->mScheduler->RR(sys->mQuantum, sys->mTime, rrCount);
+		// true if all processes in job list are finished
+		bool finished = false;
 
-		// Highest Response Ratio Next
-		else if (sys->mSchedSel == 5)
-			sys->mScheduler->HRRN(sys->mTime);
+		// TODO: rework logic to run every time slice instead of once per quantum
+		// run processes until all jobs finished
+		while (!finished && execute)
+		{
+			// check for newly arrived processes and add them to Scheduler
+			sys->schedule();
 
-		// display process progress
-		sys->printProgress();
+			// clean finished processes from Scheduler
+			sys->mScheduler->clean();
 
-		// mark completed processes as finished and check if all done
-		finished = sys->jobsFinished();
-	} 
+			///* execute processes according to selected scheduling algorithm *///
 
- 	// generate report text file
-	genReport(sys);
+			// First Come - First Serve
+			if (sys->mSchedSel == 1)
+				sys->mScheduler->FCFS(sys->mTime);
 
+			// Shortest Job Next
+			else if (sys->mSchedSel == 2)
+				sys->mScheduler->SJN(sys->mTime);
+
+			// Shortest Remaining Time
+			else if (sys->mSchedSel == 3)
+				sys->mScheduler->SRT(sys->mTime);
+
+			// Round Robin
+			else if (sys->mSchedSel == 4)
+				sys->mScheduler->RR(sys->mQuantum, sys->mTime, rrCount);
+
+			// Highest Response Ratio Next
+			else if (sys->mSchedSel == 5)
+				sys->mScheduler->HRRN(sys->mTime);
+
+			// display process progress
+			sys->printProgress();
+
+			// mark completed processes as finished and check if all done
+			finished = sys->jobsFinished();
+		} 
+
+		// generate report text file
+		if (execute)
+			genReport(sys);
+	}
 	return 0;
 }
 
@@ -148,22 +159,15 @@ int selectScheduler()
 	cout << "3: Shortest Remaining Time\n";
 	cout << "4: Round Robin\n";
 	cout << "5: Highest Response Ratio Next\n";
+	cout << "0: exit\n";
 
 	int schedSel = -1;
-	while (schedSel < 1 || schedSel > 5)
+	while (schedSel < 0 || schedSel > 5)
 	{
 		cout << "\nEnter scheduler selection # : ";
 		cin >> schedSel;
 
-		// TODO : catch string input error
-		//while (cin.fail())
-		//{
-		//	cout << "dbg\n";
-		//	cin.clear();
-		//	cin.ignore();
-		//}
-
-		if (schedSel < 1 || schedSel > 5)
+		if (schedSel < 0 || schedSel > 5)
 			cout << "invalid selection number\n";
 	}
 
@@ -201,8 +205,8 @@ void genReport(Sys* sys)
 	string filename;
 
 	// First Come - First Serve
-	//if (sys->mSchedSel == 1)
-		//sys->mScheduler->FCFS(sys->mQuantum, sys->mTime);
+	if (sys->mSchedSel == 1)
+		filename = "FCFS.txt";
 
 	//// Shortest Job Next
 	if (sys->mSchedSel == 2)
@@ -220,13 +224,14 @@ void genReport(Sys* sys)
 	else if (sys->mSchedSel == 5)
 		filename = "HRRN.txt";
 
-	string filepath = "/usr/local/home/adpvg9/SDRIVE/CS3800/mini-scheduler/"+filename;
-	//const char *path = filepath;
-    ofstream report(filepath); //open in constructor
+    ofstream report(filename); //open in constructor
 	
 	report << filename << "\n\n";
 	report << "Process\t  Exe Time  Run Time   Normalized Turn-Around Time\n";
 	report << "=============================================================================\n";
+
+	// normalized turn around time sum
+	float normTrSum = 0;
 
 	// sort processes in order of exe time
 	sort(sys->mProcesses.begin(), sys->mProcesses.end(), exeTime);
@@ -236,6 +241,7 @@ void genReport(Sys* sys)
 		int exeT = sys->mProcesses[i].mExeT;
 		int runT = sys->mProcesses[i].mRunT;
 		float normTr = float(runT)/exeT;
+		normTrSum += normTr;
 
 		report << sys->mProcesses[i].mName << "\t  ";
 		report << exeT << "\t    ";
@@ -243,9 +249,14 @@ void genReport(Sys* sys)
 		report << normTr << "\n";	
 	}
 	
+	// calculate average normalized turn around time
+	float normTrAvg = normTrSum / sys->mProcesses.size();
+
+	report << "\nAvg Normalized Turn-Around Time: " << normTrAvg << "\n";
+
 	report.close();
 
-	cout << "generated report: " << filename << "\n";
+	cout << "\ngenerated report: " << filename << "\n";
 }
 
 bool exeTime(Process p1, Process p2) {
