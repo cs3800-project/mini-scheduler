@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Sys.h
+// sys.h
 // @desc: Sys class header file
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -14,14 +14,14 @@
 class Sys
 {
 public:
-	Scheduler* mScheduler;
+	Scheduler* mScheduler;			// system's Scheduler
 	vector <Process> mProcesses;	// process job list read in at start 
 	
 	int mQuantum;	// time units for process execution before rescheduling 
 	int mSchedSel;	// scheduling algorithm selection
 	int mTime;		// current system time
 
-	Sys() { mTime = 0; } // initiliaze run time = 0
+	Sys() { mTime = 0; mQuantum = 1; } // initiliaze run time = 0
 
 	void schedule();		// add newly arrived processes from job list to Scheduler
 	bool jobsFinished();	// return true if all processes in job list are finished

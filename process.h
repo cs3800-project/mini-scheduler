@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Process.h
+// process.h
 // @desc: Process class header file
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +17,7 @@ struct Process
 public:
 	string mName;	// process name
 	bool mFinished;	// true if done executing, false otherwise
+	bool mScheduled; // true if process has been added to scheduler
 	int mArrivalT;	// scheduled arrival time
 	int mStartT;	// start time ???
 	int mExeT;		// time needed to execute
@@ -25,7 +26,7 @@ public:
 	int mEndT;		// end time
 
 	Process() { mRunT = 0; mProgressT = 0; 
-				mFinished = false; }
+				mFinished = false; mScheduled = false; }
 };
 
 #endif

@@ -1,7 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////
+// sys.cpp
+// @desc: Sys class implementation file
+///////////////////////////////////////////////////////////////////////////////
+
 #include "sys.h"
 
 // add newly arrived processes from job list to Scheduler
-// return: NONE
+// return: true if one or more processes added to Scheduler
 void Sys::schedule()
 {
 	// if no jobs left to schedule
@@ -15,13 +20,15 @@ void Sys::schedule()
 	for (int i = 0; i < mProcesses.size(); i++)
 	{
 		// add process to Scheduler
-		if (mProcesses[i].mArrivalT <= mTime && 
-			mProcesses[i].mArrivalT > mTime-mQuantum)
+		if (mProcesses[i].mArrivalT <= mTime && !mProcesses[i].mScheduled)
+		{
 			mScheduler->mProcesses.push_back(&mProcesses[i]);
+			mProcesses[i].mScheduled = true;
+		}
 	}
 }
 
-// check if all processes finished
+// mark completed processes as finished
 // return: true if all processes in job list are finished
 bool Sys::jobsFinished()
 {
@@ -29,25 +36,30 @@ bool Sys::jobsFinished()
 	if (mProcesses.size() == 0)
 		return true;
 
-	// print progress of each process on Scheduler
+	bool ret = true;
+
+	// mark completed processes as finished
 	for (int i = 0; i < mProcesses.size(); i++)
 	{
-		if (mProcesses[i].mFinished == false)
-			return false;
+		if (mProcesses[i].mExeT == mProcesses[i].mProgressT)
+			mProcesses[i].mFinished = true;
+		else
+			ret = false;
 	}
 
-	return true;
+	return ret;
 }
 
 // print progress of all processes on Scheduler
 // return: NONE
+
 void Sys::printProgress()
 {
 	// if no jobs left to schedule
 	if (mScheduler->mProcesses.size() == 0)
 		return;
 
-	cout << "\n" << mTime-mQuantum << " ~ " << mTime << " _________________________________\n";
+	cout << "\n" << mTime << " ___________________________________________\n";
 
 	// print progress of each process on Scheduler
 	for (int i = 0; i < mScheduler->mProcesses.size(); i++)
