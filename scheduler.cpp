@@ -39,6 +39,7 @@ void Scheduler::SRT(const int sysTime)
 
 	int srt = INT_MAX;	// shortest remaining time
 
+	// determine process with shortest remaining exe time
 	for (int i = 0; i < mProcesses.size(); i++)
 	{
 		// remaining exe time for process
@@ -54,14 +55,13 @@ void Scheduler::SRT(const int sysTime)
 	// "run" SRT process by incrementing its progress time
 	srtProc->mProgressT++;
 
+	// update process run time
+	srtProc->mRunT = sysTime+1 - srtProc->mArrivalT;
+
 	// process finished
 	if (srtProc->mProgressT == srtProc->mExeT)
-	{
-		srtProc->mFinished = true;
-		srtProc->mRunT = sysTime+1 - srtProc->mArrivalT;
 		cout << "\n\tprocess \'" << srtProc->mName << "\' finished | " 
 			<< "run time: " << srtProc->mRunT << "\n";
-	}
 }
 
 void Scheduler::clean()

@@ -20,7 +20,7 @@ void Sys::schedule()
 	}
 }
 
-// check if all processes finished
+// mark completed processes as finished
 // return: true if all processes in job list are finished
 bool Sys::jobsFinished()
 {
@@ -28,14 +28,18 @@ bool Sys::jobsFinished()
 	if (mProcesses.size() == 0)
 		return true;
 
-	// print progress of each process on Scheduler
+	bool ret = true;
+
+	// mark completed processes as finished
 	for (int i = 0; i < mProcesses.size(); i++)
 	{
-		if (mProcesses[i].mFinished == false)
-			return false;
+		if (mProcesses[i].mExeT == mProcesses[i].mProgressT)
+			mProcesses[i].mFinished = true;
+		else
+			ret = false;
 	}
 
-	return true;
+	return ret;
 }
 
 // print progress of all processes on Scheduler
