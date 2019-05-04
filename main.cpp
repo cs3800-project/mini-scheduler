@@ -55,9 +55,6 @@ int main(int argc, char** argv)
 	// run processes until all jobs finished
 	while (!finished)
 	{
-		// display process progress
-		sys->printProgress();
-
 		// check for newly arrived processes and add them to Scheduler
 		sys->schedule();
 
@@ -81,13 +78,14 @@ int main(int argc, char** argv)
 		//else if (sys->mSchedSel == 4)
 		//	sys->mScheduler->RR(sys->mQuantum, sys->mTime);
 
-		//// Highest Response Ratio Next
-		//else if (sys->mSchedSel == 5)
-		//	sys->mScheduler->HRRN(sys->mQuantum, sys->mTime);
+		// Highest Response Ratio Next
+		else if (sys->mSchedSel == 5)
+			sys->mScheduler->HRRN(sys->mTime);
 
-		sys->mTime++;
+		// display process progress
+		sys->printProgress();
 
-		// check if finished
+		// mark completed processes as finished and check if all done
 		finished = sys->jobsFinished();
 	} 
 

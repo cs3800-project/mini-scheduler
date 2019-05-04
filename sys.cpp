@@ -15,8 +15,11 @@ void Sys::schedule()
 	for (int i = 0; i < mProcesses.size(); i++)
 	{
 		// add process to Scheduler
-		if (mProcesses[i].mArrivalT == mTime)
+		if (mProcesses[i].mArrivalT <= mTime && !mProcesses[i].mScheduled)
+		{
 			mScheduler->mProcesses.push_back(&mProcesses[i]);
+			mProcesses[i].mScheduled = true;
+		}
 	}
 }
 

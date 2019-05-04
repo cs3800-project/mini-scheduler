@@ -1,5 +1,6 @@
 #include "scheduler.h"
 
+// Shortest Job Next
 void Scheduler::SJN(int &time) {
     // no processes to schedule
     if(mProcesses.size() == 0) {
@@ -31,10 +32,13 @@ void Scheduler::SJN(int &time) {
 	}
 }
 
-// TODO: rework logic to increment by time slice instead of quantum
 // Shortest Remaining Time
-void Scheduler::SRT(const int sysTime)
+void Scheduler::SRT(int& sysTime)
 {
+	 // no processes to schedule
+    if(mProcesses.size() == 0)
+        return;
+
 	Process* srtProc; // process with shortest remaining exe time
 
 	int srt = INT_MAX;	// shortest remaining time
@@ -55,8 +59,11 @@ void Scheduler::SRT(const int sysTime)
 	// "run" SRT process by incrementing its progress time
 	srtProc->mProgressT++;
 
+	// increment system time
+	sysTime++;
+
 	// update process run time
-	srtProc->mRunT = sysTime+1 - srtProc->mArrivalT;
+	srtProc->mRunT = sysTime - srtProc->mArrivalT;
 
 	// process finished
 	if (srtProc->mProgressT == srtProc->mExeT)
@@ -64,6 +71,47 @@ void Scheduler::SRT(const int sysTime)
 			<< "run time: " << srtProc->mRunT << "\n";
 }
 
+// Highest Response Ratio Next
+void Scheduler::HRRN(int& sysTime)
+{
+	 // no processes to schedule
+    if(mProcesses.size() == 0)
+        return;
+
+	int hrr = 0; // highest response ratio
+	Process* hrrProc; // process with highest response ratio
+
+	// determine process with highest response ratio
+	for (int i = 0; i < mProcesses.size(); i++)
+	{
+		// time spent waiting
+		int waitT = sysTime - mProcesses[i]->mArrivalT;
+
+		// response ratio: ( w + s ) / s
+		int rr = ( waitT + mProcesses[i]->mExeT )
+					/ mProcesses[i]->mExeT;
+
+		if (rr > hrr)
+		{
+			hrr = rr;
+			hrrProc = mProcesses[i];
+		}
+	}
+
+	// run process with highest response ratio to completion
+	hrrProc->mProgressT = hrrProc->mExeT;
+
+	// update system time to reflect process execution
+	sysTime+= hrrProc->mExeT;
+
+	// update process run time
+	hrrProc->mRunT = sysTime - hrrProc->mArrivalT;
+
+	cout << "\n\tprocess \'" << hrrProc->mName << "\' finished | " 
+		<< "run time: " << hrrProc->mRunT << "\n";
+}
+
+// remove finished processes from Scheduler
 void Scheduler::clean()
 {
 	// if no jobs left to clean

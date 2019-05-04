@@ -1,6 +1,6 @@
-VS2017 10 25
+VS2017 1 25
 Github 0 35
-Chrome 15 15
-Spotify 22 5
-YouTube 30 18
-Netflix 38 5
+Chrome 0 15
+Spotify 0 5
+YouTube 0 18
+Netflix 0 10
