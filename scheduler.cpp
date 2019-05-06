@@ -31,17 +31,6 @@ void Scheduler::RR(const int quantum, int& sysTime, int& count) {
 	int minProgT = INT_MAX;
 	Process* nextProc;
 
-	// // determine process with least progress time so far
-	// for (int i = 0; i < mProcesses.size(); i++)
-	// {
-	// 	if (mProcesses[i]->mProgressT < minProgT)
-	// 	{
-	// 		minProgT = mProcesses[i]->mProgressT;
-	// 		nextProc = mProcesses[i];
-	// 	}
-	// }
-
-	cout << "\nrrCount: " << count << "\t# Procs: " << mProcesses.size();
 	// determine next process
 	int index = count % mProcesses.size();
 	nextProc = mProcesses[index];
@@ -70,6 +59,13 @@ void Scheduler::RR(const int quantum, int& sysTime, int& count) {
 	if (nextProc->mProgressT == nextProc->mExeT)
 		cout << "\n\tprocess \'" << nextProc->mName << "\' finished | " 
 			<< "run time: " << nextProc->mRunT << "\n";
+	// process not finished
+	else {
+		// move process to back to continue execution
+		mProcesses.push_back(nextProc);
+		// remove original process from starting position
+		mProcesses.erase(mProcesses.begin() + index);
+	}
 }
 
 // Shortest Job Next
