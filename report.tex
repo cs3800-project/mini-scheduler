@@ -1,0 +1,85 @@
+%
+%You can keep the 12pt font size, or go to 11pt or (default) 10pt
+% Do NOT go any larger than 12pt font size for submission
+%
+%If you want to edit a printed copy, you may want to add draft mode
+% (as in \documentclass[draft,conference,12pt]{IEEEtran})
+% This adds space between the lines providing easier editing markup
+%
+%For more details see
+% http://ras.papercept.net/conferences/support/files/IEEEtran_HOWTO.pdf
+%
+\documentclass[conference,11pt]{IEEEtran}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{url}
+\usepackage{flushend}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{Programmatically Determining Optimal Scheduling Algorithms for Varying Process Sets}
+
+\author{\IEEEauthorblockN{Rachael Engle, Anna Pankiewicz, and Albert Perlman}
+\IEEEauthorblockA{Computer Science Department\\
+Missouri University of Science and Technology\\
+Rolla, MO 65409}}
+
+% make the title area
+\maketitle
+
+\begin{abstract}
+This work explores the advantages and disadvantages of using particular scheduling algorithms with different types of processes. The five specific algorithms analyzed were First In First Out, Round Robin, Shortest Job Next, Shortest Remaining Time, and Highest Response Ratio Next.
+\end{abstract}
+
+\section{Background}
+Through the operating systems class this semester, each of these five scheduling algorithms were discussed. A high-level comparison was also provided in the lecture notes, highlighting differences in throughput, response time, overhead, effect on processes, and starvation.
+
+While these given comparisons are useful, the purpose of our project was to implement these scheduling algorithms and observe the differences ourselves. As we are only simulating one processor and these are largely uniprocessor scheduling algorithms, some metrics are difficult to observe, such as throughput. However, by analyzing other metrics such as turnaround time, normalized turnaround time, and response time, we can gain insight into the more accessible performance metrics.
+
+\section{Introduction}
+Our simulation centered around a system capable of handling incoming jobs, scheduling them, and allowing the user to select a scheduling function. A simulated job file is provided at the command line, and this file contains the process names, arrival times, and execution times. For simplicity's sake, the execution time of a process is provided, as it would be outside the scope of the project to analyze previous jobs and their characteristics to provide even remotely accurate time estimates.
+
+This aforementioned simulated system is not alone in handling process arrivals and requests. Along with the "system", there is a master scheduler that runs the selected algorithm until all incoming processes have been completed. Every time cycle, this scheduler checks for jobs arriving at the current time, adds them to the appropriate queue of the running scheduling algorithm, and provides a snapshot of the system state at that time. When all jobs are finished, the scheduler concludes and produces a report of the algorithm's performance on that process set.
+
+Every process represented in our system had certain information associated with it, along with the provided arrival and execution times. These included the actual start time of the process, cumulative time spent executing on the processor, total run time, and end time. Each scheduling algorithm function is configured to only run once per time cycle, and the master scheduler is responsible for ensuring that all processes are finished. At the end of a simulation, the system generates reports for each algorithm used.
+
+\section{Algorithms}
+
+\subsection{First In First Out}
+Arguably, the most simple scheduling algorithm is First In First Out (FIFO). As processes arrive, they are added to a queue. When the processor finishes executing a job, the longest-waiting process from this queue is selected to run.
+
+There are some metrics that were outside the given scope of our project. We were unable to compare the performance of FIFO on processor-bound processes vs. I/O bound processes, and we were unable to simulate multiple processors running simultaneously as they would on a real system.
+
+\subsection{Round Robin}
+Round Robin (RR) utilizes the act of preemption to schedule processes. Each process is given a length of time, the time quantum, to complete its job. If the process cannot complete during the time given, it is moved and added to the end of queue to continue executing later. This method of scheduling helps prevent starvation of any process since each process gets slices of time for executing.
+
+However, there are some disadvantages to RR. In our implementation, there is no priority for important processes. When a process arrives, it is placed in the queue and has the same time quantum as any other process. With smaller time quantums, a significant amount of time is spent on switching processes and can extend the normalized turn around time of the processes.
+
+\subsection{Shortest Job Next}
+A simple non preemptive approach to uniprocessor scheduling is Shortest Job Next. Like FIFO, an entire process executes fully, but the method for choosing the next process is different. After a process completes, the scheduler looks at the execution time of the waiting processes and chooses the shortest time. That shortest-execution process is then handed off to the processor to complete.
+
+In our implementation, we made some necessary adjustments according to the scope of this project. For simplicity's sake, we provided a process's execution time immediately. In more realistic implementations of this algorithm, various methods are used to provide running time estimates, such as averaging the execution times of previously seen and fairly similar processes. Each possible method requires extra overhead to record and calculate these necessary values.
+
+Another consideration in SJN scheduling is the possibility of starvation. With our project, job files had a definite number of processes, and more couldn't be dynamically added. In uses of this algorithm on real processors, longer jobs may experience starvation if more short jobs keep arriving. With our system, this is not the case, as all provided jobs will eventually execute.
+
+\subsection{Shortest Remaining Time}
+While SJN may be favorable among non-preemptive approaches, it can be improved upon using preemption. The process with the shortest execution time is chosen to run, but things may change when a new process arrives. If the new process's running time is shorter than the currently running process's, the current process is preempted and the new one is given to the processor.
+
+\subsection{Highest Response Ratio Next}
+
+
+\section{Results}
+
+
+\end{document}
