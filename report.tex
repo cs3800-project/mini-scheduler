@@ -28,7 +28,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Optimal Scheduling Algorithms for Varying Process Sets}
+\title{Programmatically Determining Optimal Scheduling Algorithms for Varying Process Sets}
 
 \author{\IEEEauthorblockN{Rachael Engle, Anna Pankiewicz, and Albert Perlman}
 \IEEEauthorblockA{Computer Science Department\\
@@ -43,14 +43,16 @@ This work explores the advantages and disadvantages of using particular scheduli
 \end{abstract}
 
 \section{Background}
-Through the operating systems class this semester, each of these five scheduling algorithms were discussed. A comparison was also provided, highlighting differences in throughput, response time, overhead, effect on processes, and starvation.
+Through the operating systems class this semester, each of these five scheduling algorithms were discussed. A high-level comparison was also provided in the lecture notes, highlighting differences in throughput, response time, overhead, effect on processes, and starvation.
 
-While these given comparisons are fantastic, the purpose of our project was to implement these scheduling algorithms and observe the differences ourselves. As we are only simulating one processor, some metrics are difficult to observe, such as throughput. However, by analyzing other metrics such as turnaround time, normalized turnaround time, and response time, we can gain insight into the more qualitative performance metrics.
+While these given comparisons are useful, the purpose of our project was to implement these scheduling algorithms and observe the differences ourselves. As we are only simulating one processor and these are largely uniprocessor scheduling algorithms, some metrics are difficult to observe, such as throughput. However, by analyzing other metrics such as turnaround time, normalized turnaround time, and response time, we can gain insight into the more accessible performance metrics.
 
 \section{Introduction}
-Our program design centered around a simulated system capable of handling incoming jobs, scheduling them, and allowing the user to select a scheduling function. A simulated job file is provided at the command line, and this file contains the process names, arrival times, and execution times. For simplicity's sake, the execution time of a process is provided, as it would be outside the scope of the project to analyze previous jobs and their characteristics to provide even remotely accurate time estimates.
+Our simulation centered around a system capable of handling incoming jobs, scheduling them, and allowing the user to select a scheduling function. A simulated job file is provided at the command line, and this file contains the process names, arrival times, and execution times. For simplicity's sake, the execution time of a process is provided, as it would be outside the scope of the project to analyze previous jobs and their characteristics to provide even remotely accurate time estimates.
 
-This aforementioned simulated system is not alone in handling process arrivals and requests. Along with the "system", there is a scheduler that runs the selected algorithm until all incoming processes have been completed. Every time cycle, this scheduler checks for jobs arriving at the current time, adds them to the appropriate queue of the running scheduling algorithm, and provides a snapshot of the system state at that time. When all jobs are finished, the scheduler concludes and produces a report of the algorithm's performance on that process set.
+This aforementioned simulated system is not alone in handling process arrivals and requests. Along with the "system", there is a master scheduler that runs the selected algorithm until all incoming processes have been completed. Every time cycle, this scheduler checks for jobs arriving at the current time, adds them to the appropriate queue of the running scheduling algorithm, and provides a snapshot of the system state at that time. When all jobs are finished, the scheduler concludes and produces a report of the algorithm's performance on that process set.
+
+Every process represented in our system had certain information associated with it, along with the provided arrival and execution times. These included the actual start time of the process, cumulative time spent executing on the processor, total run time, and end time. Each scheduling algorithm function is configured to only run once per time cycle, and the master scheduler is responsible for ensuring that all processes are finished. At the end of a simulation, the system generates reports for each algorithm used.
 
 \section{Algorithms}
 
